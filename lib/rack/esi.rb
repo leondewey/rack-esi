@@ -6,7 +6,15 @@ module Rack
 
     def change_html_string(html)
       html.gsub /(<esi:include src="([^"]+)" \/>)/ do |string|
-        ::Net::HTTP.get URI.parse(string.match(/src="([^"]+)"/)[1])
+
+        url = string.match(/src="([^"]+)"/)[1]
+
+        begin  
+          ::Net::HTTP.get URI.parse(url)
+        rescue Exception => e  
+          "#{url} -> #{e.message}"
+        end
+
       end
     end
 
